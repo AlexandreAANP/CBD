@@ -137,7 +137,8 @@ CREATE TABLE pessoa (
     v_profissao         VARCHAR2(20),
     n_pais              NUMBER(4) NOT NULL,
     n_destrito          NUMBER(10) NOT NULL,
-    n_cidade            NUMBER(10) NOT NULL
+    n_cidade            NUMBER(10) NOT NULL,
+    v_cod_postal        VARCHAR2(8)
 )
 LOGGING;
 
