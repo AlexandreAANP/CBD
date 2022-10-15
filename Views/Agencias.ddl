@@ -1,4 +1,4 @@
-CREATE view VIEW_Agencia as
+CREATE VIEW VIEW_Agencia AS
 SELECT 
 agencia.n_agencia,
 agencia.v_nome,
