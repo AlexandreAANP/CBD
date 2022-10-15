@@ -79,8 +79,6 @@ COMMENT ON TABLE contas IS
 
 ALTER TABLE contas ADD CONSTRAINT contas_pk PRIMARY KEY ( v_iban );
 
-ALTER TABLE contas ADD CONSTRAINT contas__un UNIQUE ( v_iban );
-
 CREATE TABLE destrito (
     n_destrito   NUMBER(10) NOT NULL,
     v_destrito   VARCHAR2(20 CHAR) NOT NULL
@@ -182,7 +180,7 @@ CREATE TABLE transacoes (
 )
 LOGGING;
 
-ALTER TABLE transacoes ADD CONSTRAINT duplicated_accounts_ck_1 CHECK ( n_emissor != n_recetor );
+ALTER TABLE transacoes ADD CONSTRAINT duplicated_accounts_ck_1 CHECK ( v_emissor != v_recetor );
 
 ALTER TABLE transacoes ADD CONSTRAINT transacoes_pk PRIMARY KEY ( n_transacao );
 
