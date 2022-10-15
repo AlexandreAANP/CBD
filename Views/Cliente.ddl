@@ -1,3 +1,4 @@
+CREATE VIEW_CLIENTE AS
 SELECT
 N_CLIENTE,
 pessoa.v_nome,
