@@ -1,4 +1,4 @@
-CREATE View_Pessoa AS
+CREATE VIEW View_Pessoa AS
 SELECT 
 N_Pessoa,
 V_Nome,
