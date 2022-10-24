@@ -1,3 +1,5 @@
+-- com isto não é possivel usar primary key na table
+-- por selecionar tabela
 CREATE SEQUENCE SEQ_PAIS START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 SELECT * FROM PAIS_EXT;
