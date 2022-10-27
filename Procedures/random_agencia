@@ -1,0 +1,52 @@
+CREATE OR REPLACE PROCEDURE Insert_Random_rows_agencia (i Number)
+AS
+counter number:=0;
+nome varchar(100);
+cidade number(10);
+distrito number(10);
+pais number(10);
+gerente number(10);
+
+exp_registos_insuficientes EXCEPTION;
+BEGIN
+    WHILE counter<i LOOP
+        -- pais = portugal = n_pais = 141 
+         pais := 141;
+        --SELECT n_pais into pais from pais where v_pais = 'Portugal';
+        --DBMS_OUTPUT.PUT_LINE(pais);
+        -- get random distrito
+        SELECT n_destrito INTO distrito FROM destrito ORDER BY DBMS_RANDOM.value FETCH NEXT 1 ROWS ONLY;
+        DBMS_OUTPUT.PUT_LINE(distrito);
+        -- get random cidade
+        SELECT n_cidade INTO cidade FROM cidade ORDER BY DBMS_RANDOM.value FETCH NEXT 1 ROWS ONLY;
+        DBMS_OUTPUT.PUT_LINE(cidade);
+        
+       -- nome of agencia will be 'agencia de ' cidade
+       SELECT v_cidade INTO nome FROM cidade where n_cidade = cidade;
+       
+       nome := 'Agencia de ' || nome;
+       DBMS_OUTPUT.PUT_LINE(nome);
+       
+       -- get random gerente
+       -- get vai buscar um funcionario aleatorio que ainda n seja gerente
+       SELECT n_funcionario into gerente FROM funcionario where n_gerente is not null or  n_gerente != n_funcionario ORDER BY DBMS_RANDOM.value FETCH NEXT 1 ROWS ONLY;
+       --SELECT n_agencia into gerente from agencia where agencia.n_gerente != gerente;
+       DBMS_OUTPUT.PUT_LINE(gerente);
+       INSERT INTO Agencia Values(default, nome, gerente, pais, distrito, cidade);
+       UPDATE FUNCIONARIO SET N_GERENTE= GERENTE;
+        COMMIT;
+        counter := counter+1;
+    END LOOP;
+    
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('Falta de dados para inserção de agencia');
+        --WHEN OTHERS THEN
+          -- DBMS_OUTPUT.PUT_LINE('erro');
+END Insert_Random_rows_agencia;
+
+--CREATE SEQUENCE SEQ_Agencia MINVALUE 2 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
+--ALTER TABLE agencia MODIFY N_agencia DEFAULT SEQ_agencia.NEXTVAL;
+
+
+exec Insert_Random_rows_agencia(5);
