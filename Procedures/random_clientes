@@ -1,0 +1,34 @@
+CREATE OR REPLACE PROCEDURE Insert_Random_rows_cliente (i Number)
+AS
+counter number:=0;
+pessoa number(20);
+agencia number(20);
+
+exp_registos_insuficientes EXCEPTION;
+BEGIN
+    WHILE counter<i LOOP
+         -- get random pessoa
+        SELECT n_pessoa INTO pessoa FROM pessoa ORDER BY DBMS_RANDOM.value FETCH NEXT 1 ROWS ONLY;
+        -- get random agencia
+        SELECT n_agencia INTO agencia FROM agencia ORDER BY DBMS_RANDOM.value FETCH NEXT 1 ROWS ONLY;
+
+        DBMS_OUTPUT.PUT_LINE(pessoa);
+        DBMS_OUTPUT.PUT_LINE(agencia);
+        INSERT INTO CLIENTE VALUES(DEFAULT, pessoa, agencia);
+        COMMIT;
+        counter := counter+1;
+    END LOOP;
+    
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('Falta de dados para inserção de agencia');
+        --WHEN OTHERS THEN
+          -- DBMS_OUTPUT.PUT_LINE('erro');
+END Insert_Random_rows_cliente;
+
+--CREATE SEQUENCE SEQ_Cliente MINVALUE 2 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
+--ALTER TABLE cliente MODIFY N_cliente DEFAULT SEQ_cliente.NEXTVAL;
+
+
+exec Insert_Random_rows_cliente(5);
+select * from cliente;
