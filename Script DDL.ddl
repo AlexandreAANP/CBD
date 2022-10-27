@@ -153,7 +153,7 @@ CREATE TABLE operacao (
     n_agencia      NUMBER(10),
     b_by_website   CHAR(1) NOT NULL,
     v_tipo         NVARCHAR2(20) NOT NULL
-)
+) PCTFREE 0
 LOGGING;
 
 ALTER TABLE operacao
@@ -255,7 +255,7 @@ CREATE TABLE transacoes (
     n_categoria   NUMBER(4) NOT NULL,
     v_emissor     NVARCHAR2(20) NOT NULL,
     v_recetor     NVARCHAR2(20) NOT NULL
-)
+) PCTFREE 0 
 LOGGING;
 
 ALTER TABLE transacoes ADD CONSTRAINT duplicated_accounts_ck_1 CHECK ( v_emissor != v_recetor );
