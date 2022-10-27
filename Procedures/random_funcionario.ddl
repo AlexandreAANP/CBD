@@ -20,7 +20,7 @@ BEGIN
         SELECT n_gerente INTO Ngerente from agencia where agencia.n_agencia = Nagencia;
         DBMS_OUTPUT.PUT_LINE(Ngerente);
         
-        INSERT INTO Funcionario VALUES(DEFAULT, pessoa, null ,nagencia);
+        INSERT INTO Funcionario VALUES(DEFAULT, pessoa, Ngerente ,nagencia);
         COMMIT;
         counter := counter+1;
     END LOOP;
