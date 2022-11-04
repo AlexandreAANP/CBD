@@ -231,7 +231,7 @@ CREATE TABLE produtos (
 LOGGING;
 
 
-COMMENT ON TABLE produto IS
+COMMENT ON TABLE produtos IS
     'Tabela de produto';
 
 ALTER TABLE produtos ADD CONSTRAINT produtos_pk PRIMARY KEY ( n_produto );
