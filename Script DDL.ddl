@@ -1,7 +1,4 @@
-COMMENT ON TABLE agencia IS
-    'Tabela de Agencias do Banco
-    Nome -> "Agencia de " + cidade
-    ';
+
 CREATE SEQUENCE SEQ_AGENCIA MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 CREATE TABLE agencia (
     n_agencia    NUMBER(10) NOT NULL DEFAULT SEQ_AGENCIA.NEXTVAL,
@@ -12,15 +9,16 @@ CREATE TABLE agencia (
     n_cidade     NUMBER(10) NOT NULL
 )
 LOGGING;
+COMMENT ON TABLE agencia IS
+    'Tabela de Agencias do Banco
+    Nome -> "Agencia de " + cidade
+    ';
 
 ALTER TABLE agencia ADD CONSTRAINT agencia_pk PRIMARY KEY ( n_agencia );
 
 ALTER TABLE agencia ADD CONSTRAINT gerente__un UNIQUE ( n_gerente );
 
 
-COMMENT ON TABLE cartao_debito IS
-    'Tabela de cartao de debito
-';
 CREATE SEQUENCE SEQ_CARTAO_DEBITO MINVALUE 1000000000000000 MAXVALUE 9999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 CREATE TABLE cartao_debito (
     n_cartao             NUMBER(16) NOT NULL DEFAULT SEQ_CARTAO.NEXTVAL,
@@ -33,11 +31,13 @@ CREATE TABLE cartao_debito (
 )
 LOGGING;
 
+COMMENT ON TABLE cartao_debito IS
+    'Tabela de cartao de debito
+';
 ALTER TABLE cartao_debito ADD CONSTRAINT cartao_debito_pk PRIMARY KEY ( n_cartao );
 
 
-COMMENT ON TABLE categorias_transacoes IS
-    'Tabela de categorias de transacoes';
+
     
 CREATE SEQUENCE SEQ_CATEGORIAS_TRANSACOES MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -46,14 +46,14 @@ CREATE TABLE categorias_transacoes (
     v_categoria   NVARCHAR2(20) NOT NULL
 )
 LOGGING;
+COMMENT ON TABLE categorias_transacoes IS
+    'Tabela de categorias de transacoes';
 
 ALTER TABLE categorias_transacoes ADD CONSTRAINT categorias_transacoes_pk PRIMARY KEY ( n_categoria );
 
 ALTER TABLE categorias_transacoes ADD CONSTRAINT categorias_transacoes__un UNIQUE ( v_categoria );
 
-COMMENT ON TABLE cidade  IS
-    'Tabela de cidades
-    Os primeiros dados são importados atráves de uma external table -> cidade_ext';
+
 
 CREATE SEQUENCE SEQ_CIDADE MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -62,12 +62,13 @@ CREATE TABLE cidade (
     v_cidade   VARCHAR2(20 CHAR) NOT NULL
 )
 LOGGING;
+COMMENT ON TABLE cidade  IS
+    'Tabela de cidades
+    Os primeiros dados são importados atráves de uma external table -> cidade_ext';
 
 ALTER TABLE cidade ADD CONSTRAINT cidade_pk PRIMARY KEY ( n_cidade );
 
 
-COMMENT ON TABLE cliente  IS
-    'Tabela de Cliente';
     
 CREATE SEQUENCE SEQ_CLIENTE MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;    
 
@@ -78,12 +79,13 @@ CREATE TABLE cliente (
 )
 LOGGING;
 
+COMMENT ON TABLE cliente  IS
+    'Tabela de Cliente';
+    
 ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY ( n_cliente );
 
 ALTER TABLE cliente ADD CONSTRAINT cliente__un UNIQUE ( n_pessoa );
 
-COMMENT ON TABLE contas IS
-    'Tabela de Contas';
 
 CREATE SEQUENCE SEQ_CONTAS MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -101,14 +103,15 @@ CREATE TABLE contas (
 LOGGING;
 
 
+COMMENT ON TABLE contas IS
+    'Tabela de Contas';
+
 
 ALTER TABLE contas ADD CONSTRAINT contas_pk PRIMARY KEY ( n_conta );
 
 ALTER TABLE cliente ADD CONSTRAINT contas__un UNIQUE ( v_iban );
 
-COMMENT ON TABLE destrito IS
-    'Tabela de cidades
-    Os primeiros dados são importados atráves de uma external table -> distrito_ext';
+
     
 CREATE SEQUENCE SEQ_DISTRITO MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -118,12 +121,15 @@ CREATE TABLE destrito (
 )
 LOGGING;
 
+COMMENT ON TABLE destrito IS
+    'Tabela de cidades
+    Os primeiros dados são importados atráves de uma external table -> distrito_ext';
+
 ALTER TABLE destrito ADD CONSTRAINT destrito_pk PRIMARY KEY ( n_destrito );
 
 CREATE SEQUENCE SEQ_FUNCIONARIO MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
-COMMENT ON TABLE funcionario IS
-    'Tabela de funcionarios';
+
 
 CREATE TABLE funcionario (
     n_funcionario   NUMBER(10) NOT NULL,
@@ -133,14 +139,11 @@ CREATE TABLE funcionario (
 )
 LOGGING;
 
+COMMENT ON TABLE funcionario IS
+    'Tabela de funcionarios';
+
 ALTER TABLE funcionario ADD CONSTRAINT funcionario_pk PRIMARY KEY ( n_funcionario );
 
-
-COMMENT ON TABLE operacao IS
-    'Tabela de operacao
-    v_tipo tem uma constraint que permite apenas valore "levantamento" ou "deposito"
-    e n_cartao ou n_agencia tem que ser diferente ou entao by_website tem de ser true
-    ';
 
 CREATE SEQUENCE SEQ_OPERACAO MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -156,6 +159,14 @@ CREATE TABLE operacao (
 ) PCTFREE 0
 LOGGING;
 
+
+
+COMMENT ON TABLE operacao IS
+    'Tabela de operacao
+    v_tipo tem uma constraint que permite apenas valore "levantamento" ou "deposito"
+    e n_cartao ou n_agencia tem que ser diferente ou entao by_website tem de ser true
+    ';
+
 ALTER TABLE operacao
     ADD CONSTRAINT levantamento_or_deposito_ck_2 CHECK ( lower(v_tipo) IN (
         'levantamento',
@@ -169,9 +180,7 @@ ALTER TABLE operacao
 
 ALTER TABLE operacao ADD CONSTRAINT operacoes_pk PRIMARY KEY ( n_operacao );
 
-COMMENT ON TABLE pais IS
-    'Tabela de pais
-    Os primeiros dados são importados atráves de uma external table -> distrito_ext';
+
     
 CREATE SEQUENCE SEQ_PAIS MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -181,10 +190,13 @@ CREATE TABLE pais (
 )
 LOGGING;
 
+COMMENT ON TABLE pais IS
+    'Tabela de pais
+    Os primeiros dados são importados atráves de uma external table -> distrito_ext';
+
 ALTER TABLE pais ADD CONSTRAINT pais_pk PRIMARY KEY ( n_pais );
 
-COMMENT ON TABLE pessoa IS
-    'Tabela de pessoa';
+
 
 CREATE SEQUENCE SEQ_PESSOA MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -201,11 +213,12 @@ CREATE TABLE pessoa (
 )
 LOGGING;
 
+COMMENT ON TABLE pessoa IS
+    'Tabela de pessoa';
+
 ALTER TABLE pessoa ADD CONSTRAINT pessoa_pk PRIMARY KEY ( n_pessoa );
 
 
-COMMENT ON TABLE produto IS
-    'Tabela de produto';
 
 CREATE SEQUENCE SEQ_PRODUTOS MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -217,6 +230,10 @@ CREATE TABLE produtos (
 )
 LOGGING;
 
+
+COMMENT ON TABLE produto IS
+    'Tabela de produto';
+
 ALTER TABLE produtos ADD CONSTRAINT produtos_pk PRIMARY KEY ( n_produto );
 
 CREATE TABLE sub_titulares (
@@ -227,10 +244,6 @@ LOGGING;
 
 ALTER TABLE sub_titulares ADD CONSTRAINT sub_titulares_pk PRIMARY KEY ( n_cliente );
 
-
-COMMENT ON TABLE tipo_produto IS
-    'Tabela de tipo_produto';
-
 CREATE SEQUENCE SEQ_TIPO_PRODUTO MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 CREATE TABLE tipo_produto (
@@ -239,12 +252,14 @@ CREATE TABLE tipo_produto (
 )
 LOGGING;
 
+COMMENT ON TABLE tipo_produto IS
+    'Tabela de tipo_produto';
+
+
 ALTER TABLE tipo_produto ADD CONSTRAINT tipo_produto_pk PRIMARY KEY ( n_tipo_produto );
 
 ALTER TABLE tipo_produto ADD CONSTRAINT tipo_produto__unv1 UNIQUE ( v_nome );
 
-COMMENT ON TABLE transacoes IS
-    'Tabela de transacoes';
 
 CREATE SEQUENCE SEQ_TRANSACAO MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE NOCYCLE;
 
@@ -258,12 +273,14 @@ CREATE TABLE transacoes (
 ) PCTFREE 0 
 LOGGING;
 
+
+COMMENT ON TABLE transacoes IS
+    'Tabela de transacoes';
+
 ALTER TABLE transacoes ADD CONSTRAINT duplicated_accounts_ck_1 CHECK ( v_emissor != v_recetor );
 
 ALTER TABLE transacoes ADD CONSTRAINT transacoes_pk PRIMARY KEY ( n_transacao );
 
-COMMENT ON TABLE website_login IS
-    'Tabela de website_login';
     
 CREATE TABLE website_login (
     v_username   VARCHAR2(20 CHAR) NOT NULL,
@@ -271,6 +288,10 @@ CREATE TABLE website_login (
     n_cliente    NUMBER(10) NOT NULL
 )
 LOGGING;
+
+
+COMMENT ON TABLE website_login IS
+    'Tabela de website_login';
 
 ALTER TABLE website_login ADD CONSTRAINT website_login_pk PRIMARY KEY ( v_username );
 
