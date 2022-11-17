@@ -83,7 +83,7 @@ ALTER TABLE categorias_transacoes ADD CONSTRAINT categorias_transacoes__un UNIQU
 
 CREATE TABLE cidade (
     n_cidade     NUMBER(10)  NOT NULL,
-    v_cidade     VARCHAR2(20 CHAR) NOT NULL,
+    v_cidade     VARCHAR2(100 CHAR) NOT NULL,
     n_distrito   NUMBER(10)
 )
 LOGGING;
