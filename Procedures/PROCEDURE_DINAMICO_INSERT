@@ -1,0 +1,57 @@
+set serveroutput on
+CREATE OR REPLACE TYPE MYarray AS VARRAY(200) OF VARCHAR2(50);
+
+CREATE OR REPLACE PROCEDURE INSERT_DATA (TABLE_TO_INSERT IN VARCHAR, array_values MYarray) AS
+    
+    str_sql VARCHAR2(5000);
+    i NUMBER(2) := 1;
+    VALUES_TO_INSERT VARCHAR2(5000);
+    
+    CURSOR columna IS SELECT COLUMN_NAME from USER_TAB_COLUMNS WHERE TABLE_NAME = TABLE_TO_INSERT;
+    COLUMNAS VARCHAR2(5000);
+    UNACOL VARCHAR2(20);
+BEGIN
+    OPEN columna;
+    LOOP
+        FETCH columna into UNACOL;
+        EXIT WHEN columna%NOTFOUND;
+        
+        IF COLUMNAS IS NULL THEN
+            COLUMNAS := UNACOL;
+        ELSE
+            COLUMNAS := COLUMNAS || ','|| UNACOL ;
+        END IF;
+    END LOOP;
+    
+    FOR i IN 1..array_values.count LOOP
+        
+        IF i = array_values.count THEN
+            VALUES_TO_INSERT := VALUES_TO_INSERT || '''' || array_values(i) || '''';
+        ELSE
+            IF array_values(i) IS NULL THEN
+                VALUES_TO_INSERT :=  VALUES_TO_INSERT || 'NULL,';
+            ELSE
+                VALUES_TO_INSERT := VALUES_TO_INSERT || '''' || array_values(i) || ''',' ; 
+            END IF;
+        END IF;     
+    END LOOP;
+    dbms_output.put_line(VALUES_TO_INSERT);
+    
+    str_sql := 'INSERT INTO '|| TABLE_TO_INSERT ||' (' || COLUMNAS || ' ) VALUES ( ' ||VALUES_TO_INSERT|| ')';
+    DBMS_OUTPUT.PUT_LINE(str_sql);
+
+    EXECUTE IMMEDIATE str_sql;
+
+    CLOSE columna;
+    COMMIT;
+END INSERT_DATA;
+
+
+EXEC INSERT_DATA('AGENCIA' , MYarray(NULL, 'AGENCIA FARO', '1', '1') );
+
+EXEC INSERT_DATA('PAIS', MYarray(NULL, 'FRANCA'));
+
+EXEC INSERT_DATA('DESTRITO', MYarray(NULL, 'MADRID', '2'));
+
+EXEC INSERT_DATA('CIDADE', MYarray(NULL, 'MADRID', '2'));
+
