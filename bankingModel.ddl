@@ -51,7 +51,7 @@ ALTER TABLE agencia ADD CONSTRAINT agencia_pk PRIMARY KEY ( n_agencia );
 ALTER TABLE agencia ADD CONSTRAINT gerente__un UNIQUE ( n_gerente );
 
 CREATE TABLE cartao_debito (
-    n_cartao               NUMBER(16) DEFAULT seq_cartao.NEXTVAL NOT NULL,
+    n_cartao               NUMBER(16) NOT NULL,
     d_emissao              DATE NOT NULL,
     d_expiracao            DATE NOT NULL,
     n_cvv                  NUMBER(3) NOT NULL,
@@ -69,7 +69,7 @@ COMMENT ON TABLE cartao_debito IS
 ALTER TABLE cartao_debito ADD CONSTRAINT cartao_debito_pk PRIMARY KEY ( n_cartao );
 
 CREATE TABLE categorias_transacoes (
-    n_categoria   NUMBER(4) DEFAULT seq_categorias_transacoes.NEXTVAL NOT NULL,
+    n_categoria   NUMBER(4)  NOT NULL,
     v_categoria   NVARCHAR2(20) NOT NULL
 )
 LOGGING;
@@ -82,7 +82,7 @@ ALTER TABLE categorias_transacoes ADD CONSTRAINT categorias_transacoes_pk PRIMAR
 ALTER TABLE categorias_transacoes ADD CONSTRAINT categorias_transacoes__un UNIQUE ( v_categoria );
 
 CREATE TABLE cidade (
-    n_cidade     NUMBER(10) DEFAULT seq_cidade.NEXTVAL NOT NULL,
+    n_cidade     NUMBER(10)  NOT NULL,
     v_cidade     VARCHAR2(20 CHAR) NOT NULL,
     n_distrito   NUMBER(10)
 )
@@ -95,7 +95,7 @@ COMMENT ON TABLE cidade IS
 ALTER TABLE cidade ADD CONSTRAINT cidade_pk PRIMARY KEY ( n_cidade );
 
 CREATE TABLE cliente (
-    n_cliente   NUMBER(10) DEFAULT seq_cliente.NEXTVAL NOT NULL,
+    n_cliente   NUMBER(10)  NOT NULL,
     n_pessoa    NUMBER(20),
     n_agencia   NUMBER(10)
 )
@@ -109,7 +109,7 @@ ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY ( n_cliente );
 ALTER TABLE cliente ADD CONSTRAINT cliente__un UNIQUE ( n_pessoa );
 
 CREATE TABLE contas (
-    n_conta          NUMBER(20) DEFAULT seq_contas.NEXTVAL NOT NULL,
+    n_conta          NUMBER(20)  NOT NULL,
     v_iban           NVARCHAR2(20) NOT NULL,
     n_produto        NUMBER(10),
     f_saldo          FLOAT(20) NOT NULL,
@@ -126,7 +126,7 @@ COMMENT ON TABLE contas IS
 ALTER TABLE contas ADD CONSTRAINT contas_pk PRIMARY KEY ( n_conta );
 
 CREATE TABLE destrito (
-    n_destrito   NUMBER(10) DEFAULT seq_distrito.NEXTVAL NOT NULL,
+    n_destrito   NUMBER(10)  NOT NULL,
     v_destrito   VARCHAR2(20 CHAR) NOT NULL,
     n_pais       NUMBER(4)
 )
@@ -151,40 +151,8 @@ COMMENT ON TABLE funcionario IS
 
 ALTER TABLE funcionario ADD CONSTRAINT funcionario_pk PRIMARY KEY ( n_funcionario );
 
-CREATE TABLE operacao (
-    n_operacao     NUMBER(20) DEFAULT seq_operacao.NEXTVAL NOT NULL,
-    f_valor        NUMBER(10, 3) NOT NULL,
-    d_data         DATE NOT NULL,
-    n_cartao       NUMBER(16),
-    n_agencia      NUMBER(10),
-    b_by_website   CHAR(1) NOT NULL,
-    v_tipo         NVARCHAR2(20) NOT NULL
-)
-PCTFREE 0 PCTUSED 40 LOGGING
-    STORAGE ( PCTINCREASE 0 MINEXTENTS 1 MAXEXTENTS UNLIMITED FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT );
-
-ALTER TABLE operacao
-    ADD CONSTRAINT levantamento_or_deposito_ck_2 CHECK ( lower(v_tipo) IN (
-        'levantamento',
-        'deposito'
-    ) );
-
-COMMENT ON TABLE operacao IS
-    'Tabela de operacao
-    v_tipo tem uma constraint que permite apenas valore "levantamento" ou "deposito"
-    e n_cartao ou n_agencia tem que ser diferente ou entao by_website tem de ser true
-    '
-    ;
-
-ALTER TABLE operacao
-    ADD CONSTRAINT not_null_origin_values_ck_1 CHECK ( ( n_cartao IS NOT NULL
-                                                         OR n_agencia IS NOT NULL )
-                                                       OR b_by_website = 1 );
-
-ALTER TABLE operacao ADD CONSTRAINT operacoes_pk PRIMARY KEY ( n_operacao );
-
 CREATE TABLE pais (
-    n_pais   NUMBER(4) DEFAULT seq_pais.NEXTVAL NOT NULL,
+    n_pais   NUMBER(4)  NOT NULL,
     v_pais   VARCHAR2(20 CHAR) NOT NULL
 )
 LOGGING;
@@ -196,7 +164,7 @@ COMMENT ON TABLE pais IS
 ALTER TABLE pais ADD CONSTRAINT pais_pk PRIMARY KEY ( n_pais );
 
 CREATE TABLE pessoa (
-    n_pessoa            NUMBER(20) DEFAULT seq_pessoa.NEXTVAL NOT NULL,
+    n_pessoa            NUMBER(20)  NOT NULL,
     v_nome              VARCHAR2(20) NOT NULL,
     d_data_nascimento   DATE NOT NULL,
     n_nif               NUMBER(12) NOT NULL,
@@ -211,7 +179,7 @@ COMMENT ON TABLE pessoa IS
 ALTER TABLE pessoa ADD CONSTRAINT pessoa_pk PRIMARY KEY ( n_pessoa );
 
 CREATE TABLE produtos (
-    n_produto        NUMBER(10) DEFAULT seq_produtos.NEXTVAL NOT NULL,
+    n_produto        NUMBER(10) NOT NULL,
     v_nome           VARCHAR2(20 CHAR) NOT NULL,
     n_tipo_produto   NUMBER(10)
 )
@@ -230,7 +198,7 @@ ALTER TABLE sub_titulares ADD CONSTRAINT sub_titulares_pk PRIMARY KEY ( n_client
                                                                         n_conta );
 
 CREATE TABLE tipo_produto (
-    n_tipo_produto   NUMBER(10) DEFAULT seq_tipo_produto.NEXTVAL NOT NULL,
+    n_tipo_produto   NUMBER(10) NOT NULL,
     v_nome           VARCHAR2(20) NOT NULL
 )
 LOGGING;
@@ -243,7 +211,7 @@ ALTER TABLE tipo_produto ADD CONSTRAINT tipo_produto_pk PRIMARY KEY ( n_tipo_pro
 ALTER TABLE tipo_produto ADD CONSTRAINT tipo_produto__unv1 UNIQUE ( v_nome );
 
 CREATE TABLE transacoes (
-    n_transacao   NUMBER(20) DEFAULT seq_transacao.NEXTVAL NOT NULL,
+    n_transacao   NUMBER(20)  NOT NULL,
     n_categoria   NUMBER(4),
     n_agencia     NUMBER(10),
     n_cartao      NUMBER(16),
@@ -255,7 +223,22 @@ CREATE TABLE transacoes (
     v_tipo        VARCHAR2(30) NOT NULL
 )
 PCTFREE 0 PCTUSED 40 LOGGING
-    STORAGE ( PCTINCREASE 0 MINEXTENTS 1 MAXEXTENTS UNLIMITED FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT );
+    STORAGE ( PCTINCREASE 0 MINEXTENTS 1 MAXEXTENTS UNLIMITED FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT )
+PARTITION BY RANGE (d_data)
+(PARTITION P_JANUARY VALUES LESS THAN (TO_DATE('01-02-2022','DD-MM-YYYY')) ,
+PARTITION P_FEBRUARY VALUES LESS THAN (TO_DATE('01-03-2022','DD-MM-YYYY')) ,
+PARTITION P_MARCH VALUES LESS THAN (TO_DATE('01-04-2022','DD-MM-YYYY')), 
+PARTITION P_APRIL VALUES LESS THAN (TO_DATE('01-05-2022','DD-MM-YYYY')) ,
+PARTITION P_MAY VALUES LESS THAN (TO_DATE('01-06-2022','DD-MM-YYYY')) ,
+PARTITION P_JUNE VALUES LESS THAN (TO_DATE('01-07-2022','DD-MM-YYYY')) ,
+PARTITION P_JULY VALUES LESS THAN (TO_DATE('01-08-2022','DD-MM-YYYY')) ,
+PARTITION P_AUGUST VALUES LESS THAN (TO_DATE('01-09-2022','DD-MM-YYYY')) ,
+PARTITION P_SEPTEMBER VALUES LESS THAN (TO_DATE('01-10-2022','DD-MM-YYYY')), 
+PARTITION P_OCTOBER VALUES LESS THAN (TO_DATE('01-11-2022','DD-MM-YYYY')) ,
+PARTITION P_NOVEMBER VALUES LESS THAN (TO_DATE('01-12-2022','DD-MM-YYYY')) ,
+PARTITION P_DECEMBER VALUES LESS THAN (TO_DATE('01-01-2023','DD-MM-YYYY')) 
+)
+;
 
 ALTER TABLE transacoes
     ADD CONSTRAINT transacoes_v_tipo CHECK ( v_tipo IN (
