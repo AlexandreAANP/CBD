@@ -1,5 +1,5 @@
 CREATE TABLE Cidade_ext (
-    V_cidade VARCHAR2(20 CHAR)
+    V_cidade VARCHAR2(100 CHAR)
 )
 ORGANIZATION EXTERNAL
 (
@@ -8,7 +8,7 @@ ORGANIZATION EXTERNAL
     ACCESS PARAMETERS
     (RECORDS DELIMITED BY NEWLINE
         FIELDS(
-            V_cidade CHAR(20)
+            V_cidade CHAR(100)
         ))
         LOCATION('cidades')-- ficheiro que está na pasta external tables
 )REJECT LIMIT UNLIMITED;
