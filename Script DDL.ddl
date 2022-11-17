@@ -294,7 +294,7 @@ ALTER TABLE transacoes
                                            AND v_username IS NULL )
                                       OR ( v_username IS NOT NULL
                                            AND n_cartao IS NULL
-                                           AND n_agenica IS NULL ) );
+                                           AND n_agencia IS NULL ) );
 
 ALTER TABLE transacoes ADD CONSTRAINT transacoes_pk PRIMARY KEY ( n_transacao );
 
