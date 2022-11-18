@@ -1,5 +1,6 @@
 CREATE OR REPLACE VIEW RISCO_LAVAGEM_DINHEIRO AS
-SELECT sb.N_CLIENTE, 
+SELECT /*+ USE_HASH (tr, cd) */ 
+sb.N_CLIENTE, 
 p.v_nome, 
 pais.v_pais as nome_pessoa, 
 w.V_USERNAME,
