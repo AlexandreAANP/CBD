@@ -1,0 +1,23 @@
+CREATE VIEW NUM_CLIENTES
+SELECT count(cliente.n_cliente) AS NumeroClientes
+FROM cliente
+INNER JOIN agencia ON cliente.n_agencia = agencia.n_agencia
+GROUP BY agencia.n_agencia;
+
+CREATE VIEW RANKING_AGENCIA
+SELECT DISTINCT (agencia.n_agencia) AS Agencia, contas.f_saldo As Saldo, pessoa.v_nome As Nome
+FROM contas
+INNER JOIN sub_titulares ON contas.n_conta = sub_titulares.n_conta
+INNER JOIN cliente ON sub_titulares.n_cliente = cliente.n_cliente
+INNER JOIN agencia ON cliente.n_agencia = agencia.n_agencia
+INNER JOIN pessoa ON cliente.n_pessoa = pessoa.n_pessoa
+ORDER BY -contas.f_saldo;
+
+
+CREATE VIEW AS RANKING_BANCO
+SELECT contas.n_conta AS "Numero Conta", contas.f_saldo As Saldo, pessoa.v_nome As Nome
+FROM contas
+INNER JOIN sub_titulares ON contas.n_conta = sub_titulares.n_conta
+INNER JOIN cliente ON sub_titulares.n_cliente = cliente.n_cliente
+INNER JOIN pessoa ON cliente.n_pessoa = pessoa.n_pessoa
+ORDER BY -contas.f_saldo;
