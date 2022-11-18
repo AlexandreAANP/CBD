@@ -1,5 +1,5 @@
 CREATE VIEW NUM_CLIENTES
-SELECT count(cliente.n_cliente) AS NumeroClientes
+SELECT agencia.n_agencia AS Agencia, count(cliente.n_cliente) AS NumeroClientes
 FROM cliente
 INNER JOIN agencia ON cliente.n_agencia = agencia.n_agencia
 GROUP BY agencia.n_agencia;
